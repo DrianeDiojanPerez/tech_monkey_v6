@@ -34,7 +34,14 @@ export const Route = createRootRoute({
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Anton&family=Permanent+Marker&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Anton&display=swap",
+      },
+      {
+        rel: "preload",
+        href: "/fonts/Spyckers.woff2",
+        as: "font",
+        type: "font/woff2",
+        crossOrigin: "anonymous",
       },
     ],
   }),

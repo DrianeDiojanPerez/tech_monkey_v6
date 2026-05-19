@@ -1,13 +1,17 @@
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { createFileRoute } from "@tanstack/react-router"
 import { motion, type Variants } from "motion/react"
 import {
   BookOpen,
+  Clock,
   Coffee,
   Contact,
   FileText,
   Flag,
+  Mail,
+  MapPin,
   PaintRoller,
+  Phone,
   Presentation,
   Scissors,
   Shirt,
@@ -147,7 +151,26 @@ function smoothScrollTo(targetY: number, duration = 900) {
 
 function TechMonkeysHome() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const marqueeItems = [...SERVICES, ...SERVICES]
+
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    let raf = 0
+    const onScroll = () => {
+      if (raf) return
+      raf = window.requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 24)
+        raf = 0
+      })
+    }
+    onScroll()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => {
+      window.removeEventListener("scroll", onScroll)
+      if (raf) window.cancelAnimationFrame(raf)
+    }
+  }, [])
 
   const handleAnchorClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -174,7 +197,7 @@ function TechMonkeysHome() {
   return (
     <div className="tm-page" onClick={handleAnchorClick}>
       {/* ===================== NAV ===================== */}
-      <header className="tm-nav">
+      <header className={`tm-nav${scrolled ? " tm-nav--scrolled" : ""}`}>
         <div className="tm-nav-inner">
           <a href="#home" className="tm-brand" aria-label="Tech Monkeys home">
             <span className="tm-brand-mark" aria-hidden="true">
@@ -198,14 +221,10 @@ function TechMonkeysHome() {
                 </a>
               </li>
               <li>
-                <a href="#services">
-                  SERVICES <span className="tm-caret">▾</span>
-                </a>
+                <a href="#services">SERVICES</a>
               </li>
               <li>
-                <a href="#products">
-                  PRODUCTS <span className="tm-caret">▾</span>
-                </a>
+                <a href="#products">PRODUCTS</a>
               </li>
               <li>
                 <a href="#portfolio">PORTFOLIO</a>
@@ -265,7 +284,9 @@ function TechMonkeysHome() {
                 WE MAKE IT
               </motion.span>
               <motion.span className="line" variants={heroLine}>
-                <span className="real">REAL.</span>
+                <span className="real">
+                  REAL<span className="real-dot">.</span>
+                </span>
               </motion.span>
             </h1>
             <motion.p className="tm-hero-sub" variants={fadeUp}>
@@ -600,105 +621,57 @@ function TechMonkeysHome() {
             </p>
             <div className="tm-foot-social">
               <a href="#" aria-label="Facebook">
-                <svg viewBox="0 0 24 24" width="20" height="20">
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                  />
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
                   <path
-                    d="M13.5 8h2V6h-2c-1.4 0-2.5 1.1-2.5 2.5V10H9v2h2v6h2v-6h2l.5-2H13V8.5c0-.3.2-.5.5-.5z"
-                    fill="currentColor"
+                    d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               </a>
               <a href="#" aria-label="Instagram">
-                <svg viewBox="0 0 24 24" width="20" height="20">
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                  />
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
                   <rect
-                    x="7"
-                    y="7"
-                    width="10"
-                    height="10"
-                    rx="3"
-                    fill="none"
+                    x="3"
+                    y="3"
+                    width="18"
+                    height="18"
+                    rx="5"
                     stroke="currentColor"
-                    strokeWidth="1.4"
+                    strokeWidth="1.7"
                   />
                   <circle
                     cx="12"
                     cy="12"
-                    r="2.4"
-                    fill="none"
+                    r="4"
                     stroke="currentColor"
-                    strokeWidth="1.4"
+                    strokeWidth="1.7"
                   />
-                  <circle cx="15.3" cy="8.7" r="0.7" fill="currentColor" />
+                  <circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" />
                 </svg>
               </a>
               <a href="#" aria-label="TikTok">
-                <svg viewBox="0 0 24 24" width="20" height="20">
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    fill="none"
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
+                  <path
+                    d="M14 4v9.5a3.5 3.5 0 1 1-3.5-3.5"
                     stroke="currentColor"
-                    strokeWidth="1.4"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
-                    d="M13 6.5v8a2 2 0 1 1-2-2"
-                    fill="none"
+                    d="M14 4c.4 2.4 2.2 4.2 4.6 4.6"
                     stroke="currentColor"
-                    strokeWidth="1.4"
+                    strokeWidth="1.7"
                     strokeLinecap="round"
-                  />
-                  <path
-                    d="M13 6.5c.4 1.6 1.6 2.6 3 2.6"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               </a>
               <a href="#" aria-label="Email">
-                <svg viewBox="0 0 24 24" width="20" height="20">
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                  />
-                  <rect
-                    x="6.5"
-                    y="9"
-                    width="11"
-                    height="7"
-                    rx="1"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                  />
-                  <path
-                    d="M6.5 9.5l5.5 4 5.5-4"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                  />
-                </svg>
+                <Mail size={20} strokeWidth={1.6} />
               </a>
             </div>
           </div>
@@ -771,18 +744,24 @@ function TechMonkeysHome() {
             <h4>CONTACT US</h4>
             <ul className="tm-foot-contact">
               <li>
-                <span className="tm-ci">📞</span> (555) 123-4567
+                <Phone className="tm-ci" size={18} strokeWidth={1.8} />
+                (555) 123-4567
               </li>
               <li>
-                <span className="tm-ci">✉</span> info@techmonkeysprint.com
+                <Mail className="tm-ci" size={18} strokeWidth={1.8} />
+                info@techmonkeysprint.com
               </li>
               <li>
-                <span className="tm-ci">◎</span> 123 Print Lane
-                <br />
-                <span className="tm-indent">Yourtown, ST 12345</span>
+                <MapPin className="tm-ci" size={18} strokeWidth={1.8} />
+                <span>
+                  123 Print Lane
+                  <br />
+                  <span className="tm-indent">Yourtown, ST 12345</span>
+                </span>
               </li>
               <li>
-                <span className="tm-ci">◷</span> Mon - Fri: 9AM - 6PM
+                <Clock className="tm-ci" size={18} strokeWidth={1.8} />
+                Mon - Fri: 9AM - 6PM
               </li>
             </ul>
           </div>
