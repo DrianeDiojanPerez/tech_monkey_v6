@@ -1051,20 +1051,23 @@ html {
   z-index: 2;
   max-width: 1440px;
   margin: 0 auto;
-  padding: 46px 40px;
+  padding: 10px 40px 10px 115px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 28px;
   flex-wrap: wrap;
 }
+.tm-ready-inner .tm-btn {
+  margin-right: 125px;
+}
 .tm-ready-title {
   font-family: var(--tm-brush);
   font-weight: 400;
   color: #fff;
-  font-size: clamp(40px, 5.4vw, 72px);
-  line-height: 1;
-  margin: 0;
+  font-size: clamp(78px, 9.8vw, 148px);
+  line-height: 0.7;
+  margin: 12px 0 0 80px;
   text-shadow: 0 3px 0 rgba(0, 0, 0, 0.18);
   letter-spacing: 0.01em;
 }
