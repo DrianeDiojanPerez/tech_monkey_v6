@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router"
 import { motion, type Variants } from "motion/react"
 import {
   BookOpen,
+  CircleCheck,
   Clock,
   Coffee,
   Contact,
@@ -82,47 +83,12 @@ const SERVICES: Array<Service> = [
 
 function MonkeyMark({ size = 46 }: { size?: number }) {
   return (
-    <svg viewBox="0 0 64 64" width={size} height={size}>
-      {/* colorful hair tufts */}
-      <path d="M18 14 L20 2 L24 14 Z" fill="#00BCEB" />
-      <path d="M24 14 L28 0 L32 14 Z" fill="#EC008C" />
-      <path d="M32 14 L36 0 L40 14 Z" fill="#FFD500" />
-      <path d="M40 14 L44 2 L46 14 Z" fill="#F2641F" />
-      {/* head */}
-      <ellipse
-        cx="32"
-        cy="38"
-        rx="20"
-        ry="19"
-        fill="#0a0a0a"
-        stroke="#2a2a2a"
-        strokeWidth="1"
-      />
-      {/* face mask */}
-      <path
-        d="M32 24 c-9 0 -15 7 -15 15 c0 9 7 14 15 14 c8 0 15 -5 15 -14 c0 -8 -6 -15 -15 -15z"
-        fill="#f3efe7"
-      />
-      {/* ears */}
-      <circle cx="12" cy="36" r="5.5" fill="#0a0a0a" />
-      <circle cx="52" cy="36" r="5.5" fill="#0a0a0a" />
-      <circle cx="12" cy="36" r="2.4" fill="#f3efe7" />
-      <circle cx="52" cy="36" r="2.4" fill="#f3efe7" />
-      {/* eyes */}
-      <circle cx="26" cy="36" r="2.4" fill="#0a0a0a" />
-      <circle cx="38" cy="36" r="2.4" fill="#0a0a0a" />
-      {/* smile */}
-      <path
-        d="M27 46 q5 4 10 0"
-        fill="none"
-        stroke="#0a0a0a"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-      {/* nostrils */}
-      <circle cx="30" cy="42" r="0.9" fill="#0a0a0a" />
-      <circle cx="34" cy="42" r="0.9" fill="#0a0a0a" />
-    </svg>
+    <img
+      src="/tech-monkeys-logo.svg"
+      alt=""
+      height={size}
+      style={{ display: "block", width: "auto", height: `${size}px` }}
+    />
   )
 }
 
@@ -149,9 +115,19 @@ function smoothScrollTo(targetY: number, duration = 900) {
   requestAnimationFrame(step)
 }
 
+const NAV_SECTIONS = [
+  "home",
+  "services",
+  "products",
+  "portfolio",
+  "about",
+  "contact",
+] as const
+
 function TechMonkeysHome() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [activeHash, setActiveHash] = useState("#home")
   const marqueeItems = [...SERVICES, ...SERVICES]
 
   useEffect(() => {
@@ -172,6 +148,27 @@ function TechMonkeysHome() {
     }
   }, [])
 
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    const sections = NAV_SECTIONS.map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null)
+    if (!sections.length) return
+    const obs = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
+        if (visible[0]) setActiveHash(`#${visible[0].target.id}`)
+      },
+      {
+        rootMargin: "-40% 0px -50% 0px",
+        threshold: [0, 0.25, 0.5, 0.75, 1],
+      },
+    )
+    sections.forEach((s) => obs.observe(s))
+    return () => obs.disconnect()
+  }, [])
+
   const handleAnchorClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       let el = e.target as HTMLElement | null
@@ -189,6 +186,7 @@ function TechMonkeysHome() {
       const top =
         target.getBoundingClientRect().top + window.scrollY - navOffset
       smoothScrollTo(top, 950)
+      setActiveHash(href)
       setMenuOpen(false)
     },
     [],
@@ -201,7 +199,7 @@ function TechMonkeysHome() {
         <div className="tm-nav-inner">
           <a href="#home" className="tm-brand" aria-label="Tech Monkeys home">
             <span className="tm-brand-mark" aria-hidden="true">
-              <MonkeyMark size={46} />
+              <MonkeyMark size={58} />
             </span>
             <span className="tm-brand-word">
               <span className="tm-brand-line1">TECH MONKEYS</span>
@@ -215,26 +213,24 @@ function TechMonkeysHome() {
             style={menuOpen ? { display: "block" } : undefined}
           >
             <ul>
-              <li>
-                <a href="#home" className="tm-active">
-                  HOME
-                </a>
-              </li>
-              <li>
-                <a href="#services">SERVICES</a>
-              </li>
-              <li>
-                <a href="#products">PRODUCTS</a>
-              </li>
-              <li>
-                <a href="#portfolio">PORTFOLIO</a>
-              </li>
-              <li>
-                <a href="#about">ABOUT US</a>
-              </li>
-              <li>
-                <a href="#contact">CONTACT</a>
-              </li>
+              {(
+                [
+                  ["#services", "SERVICES"],
+                  ["#products", "PRODUCTS"],
+                  ["#portfolio", "PORTFOLIO"],
+                  ["#about", "ABOUT US"],
+                  ["#contact", "CONTACT"],
+                ] as const
+              ).map(([href, label]) => (
+                <li key={href}>
+                  <a
+                    href={href}
+                    className={activeHash === href ? "tm-active" : undefined}
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))}
             </ul>
           </nav>
 
@@ -330,6 +326,12 @@ function TechMonkeysHome() {
 
       {/* ===================== WHY CHOOSE ===================== */}
       <section id="about" className="tm-why">
+        <img
+          src="/assets/why-brush.png"
+          alt=""
+          aria-hidden="true"
+          className="tm-why-brush"
+        />
         <div className="tm-why-grid">
           <motion.div
             className="tm-why-copy"
@@ -339,10 +341,11 @@ function TechMonkeysHome() {
             viewport={viewport}
           >
             <motion.h2 className="tm-why-title" variants={fadeUp}>
-              WHY CHOOSE
-              <br />
-              <span className="tm-t-cyan">TECH</span>{" "}
-              <span className="tm-t-pink">MONKEYS?</span>
+              <span className="tm-why-line">WHY CHOOSE</span>
+              <span className="tm-why-line">
+                <span className="tm-t-cyan">TECH</span>{" "}
+                <span className="tm-t-pink">MONKEYS?</span>
+              </span>
             </motion.h2>
             <motion.span className="tm-why-rule" variants={fadeUp} />
             <motion.ul className="tm-why-list" variants={stagger}>
@@ -354,9 +357,12 @@ function TechMonkeysHome() {
                 "Local Business, Big Results",
               ].map((item) => (
                 <motion.li key={item} variants={fadeUp}>
-                  <span className="tm-check" aria-hidden="true">
-                    ⊘
-                  </span>{" "}
+                  <CircleCheck
+                    className="tm-check"
+                    size={22}
+                    strokeWidth={1.8}
+                    aria-hidden="true"
+                  />
                   {item}
                 </motion.li>
               ))}
@@ -380,7 +386,7 @@ function TechMonkeysHome() {
             <span className="tm-why-wm" aria-hidden="true">
               WE PRINT
               <br />
-              AWESOME
+              <span className="tm-why-wm-awesome">AWESOME</span>
             </span>
             <img
               src="/assets/storefront.png"
@@ -461,13 +467,11 @@ function TechMonkeysHome() {
             whileHover={{ y: -6, transition: { duration: 0.25, ease: EASE } }}
           >
             <div className="tm-work-img">
-              <div className="tm-ph tm-ph-blur">
-                <div className="tm-ph-sticker">
-                  <span className="tm-ph-good">GOOD</span>
-                  <span className="tm-ph-vibes">VIBES</span>
-                  <span className="tm-ph-only">ONLY</span>
-                </div>
-              </div>
+              <img
+                src="/assets/portfolio/stickers.png"
+                alt="Custom vinyl sticker on a Jeep"
+                className="tm-work-photo"
+              />
             </div>
             <figcaption>STICKERS</figcaption>
           </motion.figure>
@@ -498,31 +502,11 @@ function TechMonkeysHome() {
             whileHover={{ y: -6, transition: { duration: 0.25, ease: EASE } }}
           >
             <div className="tm-work-img">
-              <div className="tm-ph tm-ph-tee">
-                <div className="tm-ph-tee-shape" />
-                <div className="tm-ph-tee-art">
-                  <div className="tm-ph-savage">SAVAGE</div>
-                  <div className="tm-ph-gorilla">
-                    <svg viewBox="0 0 100 100">
-                      <ellipse
-                        cx="50"
-                        cy="60"
-                        rx="28"
-                        ry="30"
-                        fill="#1a1a1a"
-                      />
-                      <circle cx="40" cy="55" r="3" fill="#EC008C" />
-                      <circle cx="60" cy="55" r="3" fill="#EC008C" />
-                      <path
-                        d="M40 70 q10 10 20 0"
-                        fill="none"
-                        stroke="#EC008C"
-                        strokeWidth="2"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
+              <img
+                src="/assets/portfolio/dtf.png"
+                alt="DTF print on a t-shirt"
+                className="tm-work-photo"
+              />
             </div>
             <figcaption>DTF PRINTS</figcaption>
           </motion.figure>
@@ -596,7 +580,7 @@ function TechMonkeysHome() {
           <div className="tm-foot-col tm-foot-brand">
             <div className="tm-brand tm-brand-lg">
               <span className="tm-brand-mark" aria-hidden="true">
-                <MonkeyMark size={58} />
+                <MonkeyMark size={80} />
               </span>
               <span className="tm-brand-word">
                 <span
