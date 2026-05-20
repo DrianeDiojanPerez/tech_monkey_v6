@@ -136,7 +136,7 @@ const SERVICES: Array<Service> = [
 function MonkeyMark({ size = 46 }: { size?: number }) {
   return (
     <img
-      src="/tech-monkeys-logo.svg"
+      src="https://raw.githubusercontent.com/DrianeDiojanPerez/tech_monkey_v6/refs/heads/master/public/tech-monkeys-logo.svg"
       alt=""
       height={size}
       style={{ display: "block", width: "auto", height: `${size}px` }}

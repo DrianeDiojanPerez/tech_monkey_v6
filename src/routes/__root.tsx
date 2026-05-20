@@ -17,7 +17,7 @@ const ASSET_BASE =
   "https://raw.githubusercontent.com/DrianeDiojanPerez/tech_monkey_v6/refs/heads/master/public/assets"
 
 const PRELOAD_IMAGES = [
-  "/tech-monkeys-logo.svg",
+  "https://raw.githubusercontent.com/DrianeDiojanPerez/tech_monkey_v6/refs/heads/master/public/tech-monkeys-logo.svg",
   `${ASSET_BASE}/products-hero-v2.jpg`,
   `${ASSET_BASE}/storefront.png`,
   `${ASSET_BASE}/portfolio/stickers.png`,
@@ -67,7 +67,7 @@ export const Route = createRootRoute({
       },
       {
         rel: "preload",
-        href: "/tech-monkeys-logo.svg",
+        href: "https://raw.githubusercontent.com/DrianeDiojanPerez/tech_monkey_v6/refs/heads/master/public/tech-monkeys-logo.svg",
         as: "image",
         type: "image/svg+xml",
       },
@@ -119,7 +119,7 @@ function NotFoundPage() {
       <div className="tm-404-bg" aria-hidden="true" />
       <Link to="/" className="tm-404-brand" aria-label="Tech Monkeys home">
         <img
-          src="/tech-monkeys-logo.svg"
+          src="https://raw.githubusercontent.com/DrianeDiojanPerez/tech_monkey_v6/refs/heads/master/public/tech-monkeys-logo.svg"
           alt=""
           height={64}
           style={{ display: "block", width: "auto", height: "64px" }}
