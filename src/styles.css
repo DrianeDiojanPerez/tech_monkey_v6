@@ -629,6 +629,17 @@ html {
   gap: 16px;
   flex-wrap: wrap;
 }
+.tm-hero-cta .tm-btn-outline {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.tm-hero-cta .tm-btn-outline:hover {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.5);
+}
 
 /* ---------- services strip (infinite marquee) ---------- */
 .tm-svc-strip {
@@ -1700,6 +1711,35 @@ html {
 }
 
 /* ---------- responsive ---------- */
+@media (max-width: 1665px) and (min-width: 1101px) {
+  .tm-why-art img {
+    object-fit: contain;
+    object-position: bottom right;
+  }
+}
+@media (max-width: 1500px) and (min-width: 1101px) {
+  .tm-why-grid {
+    grid-template-columns: 1fr 3.4fr;
+    align-items: end;
+    padding-top: 110px;
+  }
+  .tm-why-copy {
+    padding-bottom: 60px;
+  }
+  .tm-why-art {
+    min-height: 0;
+    max-height: none;
+    height: auto;
+    align-self: end;
+  }
+  .tm-why-art img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    max-height: none;
+    object-fit: initial;
+  }
+}
 @media (max-width: 1400px) {
   .tm-ready-inner {
     padding: 28px 60px;
