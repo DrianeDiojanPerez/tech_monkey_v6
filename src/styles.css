@@ -121,7 +121,7 @@
   * {
     @apply border-border outline-ring/50;
     }
-  html, body {
+  body {
     overflow: hidden;
     }
   body {
@@ -257,7 +257,7 @@ html {
   position: sticky;
   top: 0;
   z-index: 240;
-  background: rgba(0, 0, 0, 0.96);
+  background: rgba(0, 0, 0, 0.62);
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   backdrop-filter: saturate(140%) blur(6px);
   transition:
@@ -533,17 +533,25 @@ html {
   min-height: 720px;
   --tm-svc-h: 167px;
 }
-.tm-hero-bg {
+.tm-hero-bg-frame {
   position: absolute;
   top: 0;
-  left: 0;
   right: 0;
   bottom: var(--tm-svc-h);
+  left: auto;
   width: 100%;
-  height: calc(100% - var(--tm-svc-h));
+  max-width: 1580px;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+.tm-hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   object-position: center right;
-  z-index: 0;
   pointer-events: none;
 }
 .tm-hero-scrim {
@@ -1693,6 +1701,10 @@ html {
 
 /* ---------- responsive ---------- */
 @media (max-width: 1100px) {
+  .tm-nav-inner {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
   .tm-primary {
     display: none;
   }
@@ -1727,6 +1739,8 @@ html {
 @media (max-width: 640px) {
   .tm-nav-inner {
     padding: 14px 18px;
+    margin-left: 10px;
+    margin-right: 10px;
   }
   .tm-hero-grid {
     padding: 30px 18px;
@@ -1757,9 +1771,40 @@ html {
     text-align: center;
   }
   .tm-footer {
-    padding: 46px 18px 20px;
+    padding: 48px 22px 24px;
   }
   .tm-foot-grid {
     grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .tm-foot-col + .tm-foot-col {
+    padding-top: 28px;
+    margin-top: 28px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .tm-foot-brand .tm-brand-lg svg,
+  .tm-foot-brand .tm-brand-lg img {
+    height: 56px !important;
+  }
+  .tm-foot-tag {
+    margin: 14px 0 18px;
+    font-size: 14.5px;
+  }
+  .tm-foot-col h4 {
+    margin: 0 0 14px;
+    font-size: 12px;
+  }
+  .tm-foot-col ul li {
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+  .tm-foot-svcs {
+    grid-template-columns: 1fr 1fr;
+    gap: 0 18px;
+  }
+  .tm-foot-bottom {
+    margin-top: 32px;
+    padding-top: 18px;
+    font-size: 12.5px;
   }
 }

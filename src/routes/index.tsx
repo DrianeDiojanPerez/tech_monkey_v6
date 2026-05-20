@@ -69,7 +69,7 @@ const btnInteraction = {
 
 const navOuterVariants: Variants = {
   top: {
-    backgroundColor: "rgba(0, 0, 0, 0.96)",
+    backgroundColor: "rgba(0, 0, 0, 0.62)",
     paddingTop: 0,
   },
   scrolled: {
@@ -99,7 +99,7 @@ const navInnerVariants: Variants = {
     paddingRight: 22,
     borderRadius: 26,
     borderColor: "rgba(255, 255, 255, 0.08)",
-    backgroundColor: "rgba(6, 6, 6, 0.88)",
+    backgroundColor: "rgba(6, 6, 6, 0.62)",
     boxShadow:
       "0 12px 36px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.05)",
     gap: 24,
@@ -348,7 +348,7 @@ function TechMonkeysHome() {
 
       {mounted
         ? createPortal(
-            <AnimatePresence>
+            <AnimatePresence mode="wait" initial={false}>
               {menuOpen ? (
                 <motion.div
                   key="tm-mobile-menu"
@@ -375,7 +375,6 @@ function TechMonkeysHome() {
               className="tm-mobile-list"
               initial="hidden"
               animate="show"
-              exit="hidden"
               variants={{
                 hidden: {},
                 show: {
@@ -409,7 +408,6 @@ function TechMonkeysHome() {
                 y: 0,
                 transition: { duration: 0.55, ease: EASE, delay: 0.45 },
               }}
-              exit={{ opacity: 0, y: 12, transition: { duration: 0.2 } }}
             >
               GET A QUOTE <span className="tm-arr">→</span>
             </motion.a>
@@ -422,15 +420,16 @@ function TechMonkeysHome() {
 
       {/* ===================== HERO ===================== */}
       <section id="home" className="tm-hero">
-        <motion.img
-          src="/assets/products-hero-v2.jpg"
-          alt=""
-          className="tm-hero-bg"
-          aria-hidden="true"
-          initial={{ opacity: 0, scale: 1.06 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.8, ease: EASE }}
-        />
+        <div className="tm-hero-bg-frame" aria-hidden="true">
+          <motion.img
+            src="/assets/products-hero-v2.jpg"
+            alt=""
+            className="tm-hero-bg"
+            initial={{ opacity: 0, scale: 1.06 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.8, ease: EASE }}
+          />
+        </div>
         <div className="tm-hero-scrim" aria-hidden="true" />
         <div className="tm-hero-grid">
           <motion.div

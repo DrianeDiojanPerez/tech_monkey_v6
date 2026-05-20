@@ -277,22 +277,13 @@ function AppShell({ children }: { children: React.ReactNode }) {
     if (typeof document === "undefined") return
     if (loading) return
     const body = document.body.style
-    const html = document.documentElement.style
-    const prev = {
-      bodyX: body.overflowX,
-      bodyY: body.overflowY,
-      htmlX: html.overflowX,
-      htmlY: html.overflowY,
-    }
+    const prevX = body.overflowX
+    const prevY = body.overflowY
     body.overflowX = "auto"
     body.overflowY = "auto"
-    html.overflowX = "auto"
-    html.overflowY = "auto"
     return () => {
-      body.overflowX = prev.bodyX
-      body.overflowY = prev.bodyY
-      html.overflowX = prev.htmlX
-      html.overflowY = prev.htmlY
+      body.overflowX = prevX
+      body.overflowY = prevY
     }
   }, [loading])
 
