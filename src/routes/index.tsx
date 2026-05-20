@@ -302,27 +302,33 @@ function TechMonkeysHome() {
 
           <nav className="tm-primary" aria-label="Primary">
             <ul>
-              {NAV_LINKS.map(([href, label]) => (
-                <li key={href}>
-                  <motion.a
-                    href={href}
-                    initial="rest"
-                    animate="rest"
-                    whileHover="hover"
-                  >
-                    {label}
-                    <motion.span
-                      className="tm-nav-underline"
-                      aria-hidden="true"
-                      variants={{
-                        rest: { scaleX: 0 },
-                        hover: { scaleX: 1 },
-                      }}
-                      transition={{ duration: 0.35, ease: EASE }}
-                    />
-                  </motion.a>
-                </li>
-              ))}
+              {NAV_LINKS.map(([href, label]) => {
+                const isActive = activeHash === href
+                return (
+                  <li key={href}>
+                    <a
+                      href={href}
+                      aria-current={isActive ? "page" : undefined}
+                      data-active={isActive}
+                    >
+                      <span className="tm-nav-label">{label}</span>
+                      {isActive ? (
+                        <motion.span
+                          layoutId="tm-nav-active"
+                          className="tm-nav-active"
+                          aria-hidden="true"
+                          transition={{
+                            type: "spring",
+                            stiffness: 380,
+                            damping: 32,
+                            mass: 0.6,
+                          }}
+                        />
+                      ) : null}
+                    </a>
+                  </li>
+                )
+              })}
             </ul>
           </nav>
 
