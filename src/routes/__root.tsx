@@ -42,6 +42,11 @@ export const Route = createRootRoute({
     ],
     links: [
       {
+        rel: "icon",
+        type: "image/x-icon",
+        href: "https://raw.githubusercontent.com/DrianeDiojanPerez/tech_monkey_v6/refs/heads/master/public/favicon.ico",
+      },
+      {
         rel: "stylesheet",
         href: appCss,
       },
@@ -60,7 +65,7 @@ export const Route = createRootRoute({
       },
       {
         rel: "preload",
-        href: "/fonts/Spyckers.woff2",
+        href: "https://raw.githubusercontent.com/DrianeDiojanPerez/tech_monkey_v6/refs/heads/master/public/fonts/Spyckers.woff2",
         as: "font",
         type: "font/woff2",
         crossOrigin: "anonymous",
