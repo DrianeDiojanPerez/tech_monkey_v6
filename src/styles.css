@@ -1703,6 +1703,8 @@ html {
 @media (max-width: 1400px) {
   .tm-ready-inner {
     padding: 28px 60px;
+    justify-content: center;
+    gap: 48px;
   }
   .tm-ready-title {
     margin: 0;
@@ -1779,6 +1781,25 @@ html {
     grid-template-columns: 1fr 1fr;
     gap: 30px;
   }
+  .tm-ready {
+    background-size: cover;
+    background-position: center;
+  }
+  .tm-ready-inner {
+    padding: 48px 40px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 22px;
+  }
+  .tm-ready-title {
+    margin: 0;
+    line-height: 0.85;
+  }
+  .tm-ready-inner .tm-btn {
+    margin: 0;
+  }
 }
 @media (max-width: 640px) {
   .tm-nav-inner {
@@ -1854,25 +1875,11 @@ html {
   .tm-work-card figcaption {
     font-size: 24px;
   }
-  .tm-ready {
-    background-size: cover;
-    background-position: center;
-  }
   .tm-ready-inner {
     padding: 56px 24px;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    gap: 22px;
   }
   .tm-ready-title {
-    margin: 0;
     font-size: clamp(56px, 14vw, 84px);
-    line-height: 0.85;
-  }
-  .tm-ready-inner .tm-btn {
-    margin: 0;
   }
   .tm-footer {
     padding: 48px 22px 24px;
