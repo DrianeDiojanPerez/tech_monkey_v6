@@ -13,14 +13,17 @@ import appCss from "../styles.css?url"
 
 const NOT_FOUND_EASE = [0.16, 1, 0.3, 1] as const
 
+const ASSET_BASE =
+  "https://raw.githubusercontent.com/DrianeDiojanPerez/tech_monkey_v6/refs/heads/master/public/assets"
+
 const PRELOAD_IMAGES = [
   "/tech-monkeys-logo.svg",
-  "/assets/products-hero.png",
-  "/assets/storefront.png",
-  "/assets/portfolio/stickers.png",
-  "/assets/portfolio/dtf.png",
-  "/assets/ready-banner.png",
-  "/assets/why-brush.png",
+  `${ASSET_BASE}/products-hero-v2.jpg`,
+  `${ASSET_BASE}/storefront.png`,
+  `${ASSET_BASE}/portfolio/stickers.png`,
+  `${ASSET_BASE}/portfolio/dtf.png`,
+  `${ASSET_BASE}/ready-banner.png`,
+  `${ASSET_BASE}/why-brush.png`,
 ]
 
 export const Route = createRootRoute({
@@ -70,37 +73,37 @@ export const Route = createRootRoute({
       },
       {
         rel: "preload",
-        href: "/assets/products-hero.png",
+        href: `${ASSET_BASE}/products-hero-v2.jpg`,
+        as: "image",
+        type: "image/jpeg",
+      },
+      {
+        rel: "preload",
+        href: `${ASSET_BASE}/storefront.png`,
         as: "image",
         type: "image/png",
       },
       {
         rel: "preload",
-        href: "/assets/storefront.png",
+        href: `${ASSET_BASE}/ready-banner.png`,
         as: "image",
         type: "image/png",
       },
       {
         rel: "preload",
-        href: "/assets/ready-banner.png",
+        href: `${ASSET_BASE}/why-brush.png`,
         as: "image",
         type: "image/png",
       },
       {
         rel: "preload",
-        href: "/assets/why-brush.png",
+        href: `${ASSET_BASE}/portfolio/stickers.png`,
         as: "image",
         type: "image/png",
       },
       {
         rel: "preload",
-        href: "/assets/portfolio/stickers.png",
-        as: "image",
-        type: "image/png",
-      },
-      {
-        rel: "preload",
-        href: "/assets/portfolio/dtf.png",
+        href: `${ASSET_BASE}/portfolio/dtf.png`,
         as: "image",
         type: "image/png",
       },

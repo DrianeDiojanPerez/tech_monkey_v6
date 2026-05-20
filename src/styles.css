@@ -1144,7 +1144,7 @@ html {
   position: relative;
   overflow: hidden;
   background-color: #000;
-  background-image: url("/assets/ready-banner.png");
+  background-image: url("https://raw.githubusercontent.com/DrianeDiojanPerez/tech_monkey_v6/refs/heads/master/public/assets/ready-banner.png");
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;

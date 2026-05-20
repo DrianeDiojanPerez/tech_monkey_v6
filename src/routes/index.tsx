@@ -32,6 +32,9 @@ import type { ComponentType, SVGProps } from "react"
 
 const EASE = [0.16, 1, 0.3, 1] as const
 
+const ASSET_BASE =
+  "https://raw.githubusercontent.com/DrianeDiojanPerez/tech_monkey_v6/refs/heads/master/public/assets"
+
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 14 },
   show: {
@@ -428,7 +431,7 @@ function TechMonkeysHome() {
       <section id="home" className="tm-hero">
         <div className="tm-hero-bg-frame" aria-hidden="true">
           <motion.img
-            src="/assets/products-hero-v2.jpg"
+            src={`${ASSET_BASE}/products-hero-v2.jpg`}
             alt=""
             className="tm-hero-bg"
             initial={{ opacity: 0, scale: 1.06 }}
@@ -510,7 +513,7 @@ function TechMonkeysHome() {
       {/* ===================== WHY CHOOSE ===================== */}
       <section id="about" className="tm-why">
         <img
-          src="/assets/why-brush.png"
+          src={`${ASSET_BASE}/why-brush.png`}
           alt=""
           aria-hidden="true"
           className="tm-why-brush"
@@ -572,7 +575,7 @@ function TechMonkeysHome() {
               <span className="tm-why-wm-awesome">AWESOME</span>
             </span>
             <img
-              src="/assets/storefront.png"
+              src={`${ASSET_BASE}/storefront.png`}
               alt="Tech Monkeys storefront with CMYK paint stripes"
             />
           </motion.div>
@@ -651,7 +654,7 @@ function TechMonkeysHome() {
           >
             <div className="tm-work-img">
               <img
-                src="/assets/portfolio/stickers.png"
+                src={`${ASSET_BASE}/portfolio/stickers.png`}
                 alt="Custom vinyl sticker on a Jeep"
                 className="tm-work-photo"
               />
@@ -686,7 +689,7 @@ function TechMonkeysHome() {
           >
             <div className="tm-work-img">
               <img
-                src="/assets/portfolio/dtf.png"
+                src={`${ASSET_BASE}/portfolio/dtf.png`}
                 alt="DTF print on a t-shirt"
                 className="tm-work-photo"
               />
