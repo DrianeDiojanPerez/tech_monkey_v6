@@ -6,18 +6,22 @@ import viteTsConfigPaths from "vite-tsconfig-paths"
 import tailwindcss from "@tailwindcss/vite"
 import { nitro } from "nitro/vite"
 
-const config = defineConfig({
-  plugins: [
-    devtools(),
-    nitro(),
-    // this is the plugin that enables path aliases
-    viteTsConfigPaths({
-      projects: ["./tsconfig.json"],
-    }),
-    tailwindcss(),
-    tanstackStart(),
-    viteReact(),
-  ],
-})
+const BASE = "/tech_monkey_v6/"
 
-export default config
+export default defineConfig(({ command }) => {
+  const isBuild = command === "build"
+  return {
+    base: isBuild ? BASE : "/",
+    plugins: [
+      devtools(),
+      nitro(),
+      viteTsConfigPaths({ projects: ["./tsconfig.json"] }),
+      tailwindcss(),
+      tanstackStart({
+        router: isBuild ? { basepath: BASE } : undefined,
+        spa: isBuild ? { enabled: true, maskPath: BASE } : undefined,
+      }),
+      viteReact(),
+    ],
+  }
+})
