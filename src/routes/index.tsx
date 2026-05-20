@@ -1,6 +1,14 @@
 import { useCallback, useEffect, useState } from "react"
+import { createPortal } from "react-dom"
 import { createFileRoute } from "@tanstack/react-router"
-import { motion, type Variants } from "motion/react"
+import {
+  AnimatePresence,
+  motion,
+  useAnimationFrame,
+  useMotionTemplate,
+  useMotionValue,
+  type Variants,
+} from "motion/react"
 import {
   BookOpen,
   CircleCheck,
@@ -58,6 +66,47 @@ const btnInteraction = {
   whileHover: { y: -2, transition: softSpring },
   whileTap: { y: 0, scale: 0.97, transition: softSpring },
 }
+
+const navOuterVariants: Variants = {
+  top: {
+    backgroundColor: "rgba(0, 0, 0, 0.96)",
+    paddingTop: 0,
+  },
+  scrolled: {
+    backgroundColor: "rgba(0, 0, 0, 0)",
+    paddingTop: 10,
+  },
+}
+
+const navInnerVariants: Variants = {
+  top: {
+    maxWidth: 1440,
+    paddingTop: 18,
+    paddingBottom: 18,
+    paddingLeft: 40,
+    paddingRight: 40,
+    borderRadius: 0,
+    borderColor: "rgba(255, 255, 255, 0)",
+    backgroundColor: "rgba(0, 0, 0, 0)",
+    boxShadow: "0 0 0 rgba(0,0,0,0)",
+    gap: 32,
+  },
+  scrolled: {
+    maxWidth: 1080,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 22,
+    paddingRight: 22,
+    borderRadius: 26,
+    borderColor: "rgba(255, 255, 255, 0.08)",
+    backgroundColor: "rgba(6, 6, 6, 0.88)",
+    boxShadow:
+      "0 12px 36px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.05)",
+    gap: 24,
+  },
+}
+
+const navTransition = { duration: 0.7, ease: EASE } as const
 
 export const Route = createFileRoute("/")({ component: TechMonkeysHome })
 
@@ -124,11 +173,33 @@ const NAV_SECTIONS = [
   "contact",
 ] as const
 
+const NAV_LINKS = [
+  ["#services", "SERVICES"],
+  ["#products", "PRODUCTS"],
+  ["#portfolio", "PORTFOLIO"],
+  ["#about", "ABOUT US"],
+  ["#contact", "CONTACT"],
+] as const
+
 function TechMonkeysHome() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [activeHash, setActiveHash] = useState("#home")
+  const [marqueePaused, setMarqueePaused] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
   const marqueeItems = [...SERVICES, ...SERVICES]
+
+  const marqueeX = useMotionValue(0)
+  useAnimationFrame((_, delta) => {
+    if (marqueePaused) return
+    const next = marqueeX.get() - delta * (50 / 38000)
+    marqueeX.set(next <= -50 ? next + 50 : next)
+  })
+  const marqueeTransform = useMotionTemplate`translate3d(${marqueeX}%, 0, 0)`
 
   useEffect(() => {
     if (typeof window === "undefined") return
@@ -147,6 +218,16 @@ function TechMonkeysHome() {
       if (raf) window.cancelAnimationFrame(raf)
     }
   }, [])
+
+  useEffect(() => {
+    if (typeof document === "undefined") return
+    if (!menuOpen) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => {
+      document.body.style.overflow = prev
+    }
+  }, [menuOpen])
 
   useEffect(() => {
     if (typeof window === "undefined") return
@@ -195,8 +276,20 @@ function TechMonkeysHome() {
   return (
     <div className="tm-page" onClick={handleAnchorClick}>
       {/* ===================== NAV ===================== */}
-      <header className={`tm-nav${scrolled ? " tm-nav--scrolled" : ""}`}>
-        <div className="tm-nav-inner">
+      <motion.header
+        className={`tm-nav${scrolled ? " tm-nav--scrolled" : ""}`}
+        variants={navOuterVariants}
+        initial={false}
+        animate={scrolled ? "scrolled" : "top"}
+        transition={navTransition}
+      >
+        <motion.div
+          className="tm-nav-inner"
+          variants={navInnerVariants}
+          initial={false}
+          animate={scrolled ? "scrolled" : "top"}
+          transition={navTransition}
+        >
           <a href="#home" className="tm-brand" aria-label="Tech Monkeys home">
             <span className="tm-brand-mark" aria-hidden="true">
               <MonkeyMark size={58} />
@@ -207,28 +300,27 @@ function TechMonkeysHome() {
             </span>
           </a>
 
-          <nav
-            className="tm-primary"
-            aria-label="Primary"
-            style={menuOpen ? { display: "block" } : undefined}
-          >
+          <nav className="tm-primary" aria-label="Primary">
             <ul>
-              {(
-                [
-                  ["#services", "SERVICES"],
-                  ["#products", "PRODUCTS"],
-                  ["#portfolio", "PORTFOLIO"],
-                  ["#about", "ABOUT US"],
-                  ["#contact", "CONTACT"],
-                ] as const
-              ).map(([href, label]) => (
+              {NAV_LINKS.map(([href, label]) => (
                 <li key={href}>
-                  <a
+                  <motion.a
                     href={href}
-                    className={activeHash === href ? "tm-active" : undefined}
+                    initial="rest"
+                    animate="rest"
+                    whileHover="hover"
                   >
                     {label}
-                  </a>
+                    <motion.span
+                      className="tm-nav-underline"
+                      aria-hidden="true"
+                      variants={{
+                        rest: { scaleX: 0 },
+                        hover: { scaleX: 1 },
+                      }}
+                      transition={{ duration: 0.35, ease: EASE }}
+                    />
+                  </motion.a>
                 </li>
               ))}
             </ul>
@@ -239,21 +331,99 @@ function TechMonkeysHome() {
           </a>
 
           <button
+            type="button"
             className="tm-hamburger"
-            aria-label="Open menu"
+            data-open={menuOpen}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            aria-controls="tm-mobile-menu"
             onClick={() => setMenuOpen((v) => !v)}
           >
             <span />
             <span />
             <span />
           </button>
-        </div>
-      </header>
+        </motion.div>
+      </motion.header>
+
+      {mounted
+        ? createPortal(
+            <AnimatePresence>
+              {menuOpen ? (
+                <motion.div
+                  key="tm-mobile-menu"
+                  id="tm-mobile-menu"
+                  className="tm-mobile-menu"
+                  role="dialog"
+                  aria-modal="true"
+                  aria-label="Site menu"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.35, ease: EASE }}
+                  onClick={handleAnchorClick}
+                >
+            <motion.div
+              className="tm-mobile-menu-bg"
+              aria-hidden="true"
+              initial={{ clipPath: "circle(0% at calc(100% - 36px) 40px)" }}
+              animate={{ clipPath: "circle(160% at calc(100% - 36px) 40px)" }}
+              exit={{ clipPath: "circle(0% at calc(100% - 36px) 40px)" }}
+              transition={{ duration: 0.65, ease: EASE }}
+            />
+            <motion.ul
+              className="tm-mobile-list"
+              initial="hidden"
+              animate="show"
+              exit="hidden"
+              variants={{
+                hidden: {},
+                show: {
+                  transition: { staggerChildren: 0.07, delayChildren: 0.18 },
+                },
+              }}
+            >
+              {NAV_LINKS.map(([href, label]) => (
+                <motion.li
+                  key={href}
+                  variants={{
+                    hidden: { opacity: 0, y: 24, filter: "blur(6px)" },
+                    show: {
+                      opacity: 1,
+                      y: 0,
+                      filter: "blur(0px)",
+                      transition: { duration: 0.55, ease: EASE },
+                    },
+                  }}
+                >
+                  <a href={href}>{label}</a>
+                </motion.li>
+              ))}
+            </motion.ul>
+            <motion.a
+              href="#quote"
+              className="tm-btn tm-btn-cyan tm-btn-lg tm-mobile-cta"
+              initial={{ opacity: 0, y: 18 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.55, ease: EASE, delay: 0.45 },
+              }}
+              exit={{ opacity: 0, y: 12, transition: { duration: 0.2 } }}
+            >
+              GET A QUOTE <span className="tm-arr">→</span>
+            </motion.a>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>,
+            document.body,
+          )
+        : null}
 
       {/* ===================== HERO ===================== */}
       <section id="home" className="tm-hero">
         <motion.img
-          src="/assets/products-hero.png"
+          src="/assets/products-hero-v2.jpg"
           alt=""
           className="tm-hero-bg"
           aria-hidden="true"
@@ -310,8 +480,16 @@ function TechMonkeysHome() {
         </div>
 
         {/* services strip — infinite marquee */}
-        <div className="tm-svc-strip" id="services">
-          <ul className="tm-svc-track">
+        <div
+          className="tm-svc-strip"
+          id="services"
+          onMouseEnter={() => setMarqueePaused(true)}
+          onMouseLeave={() => setMarqueePaused(false)}
+        >
+          <motion.ul
+            className="tm-svc-track"
+            style={{ transform: marqueeTransform }}
+          >
             {marqueeItems.map(({ label, Icon }, i) => (
               <li key={`${label}-${i}`} tabIndex={0}>
                 <span className="tm-svc-ico">
@@ -320,7 +498,7 @@ function TechMonkeysHome() {
                 <span>{label}</span>
               </li>
             ))}
-          </ul>
+          </motion.ul>
         </div>
       </section>
 
