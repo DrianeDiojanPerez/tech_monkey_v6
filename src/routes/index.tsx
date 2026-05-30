@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react"
 import { createPortal } from "react-dom"
+import { content } from "@/lib/content"
+import { PriceCalculator } from "@/components/PriceCalculator"
 import { createFileRoute } from "@tanstack/react-router"
 import {
   AnimatePresence,
@@ -431,7 +433,7 @@ function TechMonkeysHome() {
       <section id="home" className="tm-hero">
         <div className="tm-hero-bg-frame" aria-hidden="true">
           <motion.img
-            src={`${ASSET_BASE}/products-hero-v2.jpg`}
+            src={content.hero.image}
             alt=""
             className="tm-hero-bg"
             initial={{ opacity: 0, scale: 1.06 }}
@@ -449,39 +451,40 @@ function TechMonkeysHome() {
           >
             <h1 className="tm-hero-title">
               <motion.span className="line" variants={heroLine}>
-                PRINT YOUR
+                {content.hero.title.line1}
               </motion.span>
               <motion.span className="line" variants={heroLine}>
-                <span className="vision">VISION.</span>
+                <span className="vision">{content.hero.title.line2}</span>
               </motion.span>
               <motion.span className="line" variants={heroLine}>
-                WE MAKE IT
+                {content.hero.title.line3}
               </motion.span>
               <motion.span className="line" variants={heroLine}>
                 <span className="real">
-                  REAL<span className="real-dot">.</span>
+                  {content.hero.title.line4}
+                  <span className="real-dot">.</span>
                 </span>
               </motion.span>
             </h1>
             <motion.p className="tm-hero-sub" variants={fadeUp}>
-              High quality. Fast turnaround. Custom solutions
-              <br />
-              for your business, brand, and beyond.
+              {content.hero.subtitle}
             </motion.p>
             <motion.div className="tm-hero-cta" variants={fadeUp}>
               <motion.a
-                href="#shop"
+                href={content.hero.primaryCta.href}
                 className="tm-btn tm-btn-cyan tm-btn-lg"
                 {...btnInteraction}
               >
-                SHOP NOW <span className="tm-arr">→</span>
+                {content.hero.primaryCta.label}{" "}
+                <span className="tm-arr">→</span>
               </motion.a>
               <motion.a
-                href="#quote"
+                href={content.hero.secondaryCta.href}
                 className="tm-btn tm-btn-outline tm-btn-lg"
                 {...btnInteraction}
               >
-                GET A QUOTE <span className="tm-arr">→</span>
+                {content.hero.secondaryCta.label}{" "}
+                <span className="tm-arr">→</span>
               </motion.a>
             </motion.div>
           </motion.div>
@@ -527,21 +530,17 @@ function TechMonkeysHome() {
             viewport={viewport}
           >
             <motion.h2 className="tm-why-title" variants={fadeUp}>
-              <span className="tm-why-line">WHY CHOOSE</span>
+              <span className="tm-why-line">{content.why.title.line1}</span>
               <span className="tm-why-line">
-                <span className="tm-t-cyan">TECH</span>{" "}
-                <span className="tm-t-pink">MONKEYS?</span>
+                <span className="tm-t-cyan">{content.why.title.techWord}</span>{" "}
+                <span className="tm-t-pink">
+                  {content.why.title.monkeysWord}
+                </span>
               </span>
             </motion.h2>
             <motion.span className="tm-why-rule" variants={fadeUp} />
             <motion.ul className="tm-why-list" variants={stagger}>
-              {[
-                "Premium Quality Printing",
-                "Fast Turnaround Times",
-                "Custom Solutions for Every Need",
-                "Competitive Pricing",
-                "Local Business, Big Results",
-              ].map((item) => (
+              {content.why.items.map((item) => (
                 <motion.li key={item} variants={fadeUp}>
                   <CircleCheck
                     className="tm-check"
@@ -554,12 +553,12 @@ function TechMonkeysHome() {
               ))}
             </motion.ul>
             <motion.a
-              href="#about"
+              href={content.why.cta.href}
               className="tm-btn tm-btn-cyan"
               variants={fadeUp}
               {...btnInteraction}
             >
-              ABOUT US <span className="tm-arr">→</span>
+              {content.why.cta.label} <span className="tm-arr">→</span>
             </motion.a>
           </motion.div>
           <motion.div
@@ -575,10 +574,33 @@ function TechMonkeysHome() {
               <span className="tm-why-wm-awesome">AWESOME</span>
             </span>
             <img
-              src={`${ASSET_BASE}/storefront.png`}
+              src={content.why.image}
               alt="Tech Monkeys storefront with CMYK paint stripes"
             />
           </motion.div>
+        </div>
+      </section>
+
+      {/* ===================== PRICE CALCULATOR ===================== */}
+      <section id="products" className="tm-calc">
+        <div className="tm-calc-wrap">
+          <motion.div
+            className="tm-calc-head"
+            initial="hidden"
+            whileInView="show"
+            viewport={viewport}
+            variants={stagger}
+          >
+            <motion.h2 className="tm-calc-title" variants={fadeUp}>
+              BUILD YOUR <span className="tm-t-cyan">QUOTE</span>{" "}
+              <span className="tm-t-pink">IN SECONDS</span>
+            </motion.h2>
+            <motion.p className="tm-calc-sub" variants={fadeUp}>
+              Pick a product, dial in the size, and see the price update live.
+              Send the spec to us when you're ready.
+            </motion.p>
+          </motion.div>
+          <PriceCalculator />
         </div>
       </section>
 
@@ -643,7 +665,7 @@ function TechMonkeysHome() {
                 </div>
               </div>
             </div>
-            <figcaption>SIGNS</figcaption>
+            <figcaption>{content.work.cards[0].label}</figcaption>
           </motion.figure>
 
           <motion.figure
@@ -654,12 +676,12 @@ function TechMonkeysHome() {
           >
             <div className="tm-work-img">
               <img
-                src={`${ASSET_BASE}/portfolio/stickers.png`}
+                src={content.work.cards[1].image}
                 alt="Custom vinyl sticker on a Jeep"
                 className="tm-work-photo"
               />
             </div>
-            <figcaption>STICKERS</figcaption>
+            <figcaption>{content.work.cards[1].label}</figcaption>
           </motion.figure>
 
           <motion.figure
@@ -678,7 +700,7 @@ function TechMonkeysHome() {
                 </div>
               </div>
             </div>
-            <figcaption>EMBROIDERY</figcaption>
+            <figcaption>{content.work.cards[2].label}</figcaption>
           </motion.figure>
 
           <motion.figure
@@ -689,12 +711,12 @@ function TechMonkeysHome() {
           >
             <div className="tm-work-img">
               <img
-                src={`${ASSET_BASE}/portfolio/dtf.png`}
+                src={content.work.cards[3].image}
                 alt="DTF print on a t-shirt"
                 className="tm-work-photo"
               />
             </div>
-            <figcaption>DTF PRINTS</figcaption>
+            <figcaption>{content.work.cards[3].label}</figcaption>
           </motion.figure>
 
           <motion.figure
@@ -727,7 +749,7 @@ function TechMonkeysHome() {
                 <div className="tm-ph-card-sub">CONSTRUCTION</div>
               </div>
             </div>
-            <figcaption>BUSINESS CARDS</figcaption>
+            <figcaption>{content.work.cards[4].label}</figcaption>
           </motion.figure>
         </motion.div>
       </section>
@@ -748,14 +770,14 @@ function TechMonkeysHome() {
             viewport={viewport}
             transition={{ duration: 0.8, ease: EASE, delay: 0.1 }}
           >
-            Ready to Get Started?
+            {content.ready.title}
           </motion.h2>
           <motion.a
-            href="#quote"
+            href={content.ready.cta.href}
             className="tm-btn tm-btn-dark tm-btn-lg"
             {...btnInteraction}
           >
-            GET A FREE QUOTE <span className="tm-arr">→</span>
+            {content.ready.cta.label} <span className="tm-arr">→</span>
           </motion.a>
         </motion.div>
       </section>
@@ -784,13 +806,9 @@ function TechMonkeysHome() {
                 <span className="tm-brand-line2">GRAPHICS SOLUTIONS</span>
               </span>
             </div>
-            <p className="tm-foot-tag">
-              Your one-stop shop for all your
-              <br />
-              printing and branding needs.
-            </p>
+            <p className="tm-foot-tag">{content.footer.tagline}</p>
             <div className="tm-foot-social">
-              <a href="#" aria-label="Facebook">
+              <a href={content.footer.social.facebook} aria-label="Facebook">
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
                   <path
                     d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
@@ -801,7 +819,7 @@ function TechMonkeysHome() {
                   />
                 </svg>
               </a>
-              <a href="#" aria-label="Instagram">
+              <a href={content.footer.social.instagram} aria-label="Instagram">
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
                   <rect
                     x="3"
@@ -822,7 +840,7 @@ function TechMonkeysHome() {
                   <circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" />
                 </svg>
               </a>
-              <a href="#" aria-label="TikTok">
+              <a href={content.footer.social.tiktok} aria-label="TikTok">
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
                   <path
                     d="M14 4v9.5a3.5 3.5 0 1 1-3.5-3.5"
@@ -840,7 +858,7 @@ function TechMonkeysHome() {
                   />
                 </svg>
               </a>
-              <a href="#" aria-label="Email">
+              <a href={content.footer.social.email} aria-label="Email">
                 <Mail size={20} strokeWidth={1.6} />
               </a>
             </div>
@@ -915,31 +933,31 @@ function TechMonkeysHome() {
             <ul className="tm-foot-contact">
               <li>
                 <Phone className="tm-ci" size={18} strokeWidth={1.8} />
-                (555) 123-4567
+                {content.footer.phone}
               </li>
               <li>
                 <Mail className="tm-ci" size={18} strokeWidth={1.8} />
-                info@techmonkeysprint.com
+                {content.footer.email}
               </li>
               <li>
                 <MapPin className="tm-ci" size={18} strokeWidth={1.8} />
                 <span>
-                  123 Print Lane
+                  {content.footer.addressLine1}
                   <br />
-                  <span className="tm-indent">Yourtown, ST 12345</span>
+                  <span className="tm-indent">
+                    {content.footer.addressLine2}
+                  </span>
                 </span>
               </li>
               <li>
                 <Clock className="tm-ci" size={18} strokeWidth={1.8} />
-                Mon - Fri: 9AM - 6PM
+                {content.footer.hours}
               </li>
             </ul>
           </div>
         </div>
         <div className="tm-foot-bottom">
-          <span>
-            © 2024 Tech Monkeys Graphics Solutions. All rights reserved.
-          </span>
+          <span>{content.footer.copyright}</span>
         </div>
       </footer>
     </div>

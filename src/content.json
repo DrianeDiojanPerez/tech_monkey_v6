@@ -1,0 +1,58 @@
+{
+  "hero": {
+    "title": {
+      "line1": "PRINT YOUR",
+      "line2": "VISION.",
+      "line3": "WE MAKE IT",
+      "line4": "REAL"
+    },
+    "subtitle": "High quality. Fast turnaround. Custom solutions for your business, brand, and beyond.",
+    "primaryCta": { "label": "SHOP NOW", "href": "#shop" },
+    "secondaryCta": { "label": "GET A QUOTE", "href": "#quote" },
+    "image": "https://raw.githubusercontent.com/DrianeDiojanPerez/tech_monkey_v6/refs/heads/master/public/assets/products-hero-v2.jpg"
+  },
+  "why": {
+    "title": {
+      "line1": "WHY CHOOSE",
+      "techWord": "TECH",
+      "monkeysWord": "MONKEYS?"
+    },
+    "items": [
+      "Premium Quality Printing",
+      "Fast Turnaround Times",
+      "Custom Solutions for Every Need",
+      "Competitive Pricing",
+      "Local Business, Big Results"
+    ],
+    "cta": { "label": "ABOUT US", "href": "#about" },
+    "image": "https://raw.githubusercontent.com/DrianeDiojanPerez/tech_monkey_v6/refs/heads/master/public/assets/storefront.png"
+  },
+  "work": {
+    "cards": [
+      { "label": "SIGNS", "image": "" },
+      { "label": "STICKERS", "image": "https://raw.githubusercontent.com/DrianeDiojanPerez/tech_monkey_v6/refs/heads/master/public/assets/portfolio/stickers.png" },
+      { "label": "EMBROIDERY", "image": "" },
+      { "label": "DTF PRINTS", "image": "https://raw.githubusercontent.com/DrianeDiojanPerez/tech_monkey_v6/refs/heads/master/public/assets/portfolio/dtf.png" },
+      { "label": "BUSINESS CARDS", "image": "" }
+    ]
+  },
+  "ready": {
+    "title": "Ready to Get Started?",
+    "cta": { "label": "GET A FREE QUOTE", "href": "#quote" }
+  },
+  "footer": {
+    "tagline": "Your one-stop shop for all your printing and branding needs.",
+    "phone": "(555) 123-4567",
+    "email": "info@techmonkeysprint.com",
+    "addressLine1": "123 Print Lane",
+    "addressLine2": "Yourtown, ST 12345",
+    "hours": "Mon - Fri: 9AM - 6PM",
+    "copyright": "© 2024 Tech Monkeys Graphics Solutions. All rights reserved.",
+    "social": {
+      "facebook": "#",
+      "instagram": "#",
+      "tiktok": "#",
+      "email": "mailto:info@techmonkeysprint.com"
+    }
+  }
+}

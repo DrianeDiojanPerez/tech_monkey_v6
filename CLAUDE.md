@@ -28,13 +28,28 @@ npx shadcn@latest add <component>
 
 ## Architecture
 
-This is a **TanStack Start** app (SSR-capable React framework on Vite + Nitro) using **React 19**, **TypeScript**, **Tailwind CSS v4**, and **shadcn/ui**.
+This is a **TanStack Start** app (SSR-capable React framework on Vite + Nitro) using **React 19**, **TypeScript**, **Tailwind CSS v4**, and **shadcn/ui**. It is **deployed as a static SPA to GitHub Pages** — SSR is available in dev but not used in production.
 
 - **Entry / SSR**: TanStack Start owns the entry; there is no hand-written `main.tsx`. Vite plugins wire it up in `vite.config.ts` (`tanstackStart()`, `nitro()`, `tailwindcss()`, `viteTsConfigPaths()`, `@tanstack/devtools-vite`).
 - **Router**: `src/router.tsx` exports `getRouter()` consuming `src/routeTree.gen.ts`. The route tree is **auto-generated** by `@tanstack/router-plugin` from files in `src/routes/` — do not edit `routeTree.gen.ts` by hand; add/rename route files and let the plugin regenerate it.
 - **Routes**: file-based under `src/routes/`. `__root.tsx` defines the HTML shell (`shellComponent`), head metadata, 404 component, and embeds `TanStackDevtools`. Each child route uses `createFileRoute("<path>")({ component: ... })`.
 - **Path alias**: `@/*` → `./src/*` (resolved by `vite-tsconfig-paths` + `tsconfig.json` `paths`). shadcn aliases (`components.json`): `@/components`, `@/components/ui`, `@/lib`, `@/lib/utils`, `@/hooks`.
 - **Styling**: Tailwind v4 via `@tailwindcss/vite` — config lives inside `src/styles.css` (no `tailwind.config.*`). `cn` lives in `src/lib/utils.ts`. Prettier is configured with `prettier-plugin-tailwindcss`; `cn` and `cva` are registered as `tailwindFunctions` for class sorting.
+
+## Deployment (GitHub Pages)
+
+- Build mode is **SPA**, not server-rendered: `vite.config.ts` only applies `BASE = "/tech_monkey_v6/"`, `router.basepath`, and `tanstackStart({ spa: { enabled: true, maskPath: BASE } })` when `command === "build"`. Dev keeps `base: "/"` and full SSR.
+- `.github/workflows/deploy.yml` builds with Bun, then promotes `.output/public/_shell.html` to both `index.html` and `404.html` before uploading the Pages artifact. This is what makes client-side routing work on Pages.
+- **Asset URLs in `src/content.json` are absolute `raw.githubusercontent.com` URLs**, not paths under `/tech_monkey_v6/`. The admin editor writes them this way intentionally — they survive base-path changes and are reachable without redeploying.
+
+## Content & admin
+
+The marketing copy/imagery is data, not JSX:
+
+- **`src/content.json`** is the single source of truth for hero/why/work/ready/footer text and image URLs.
+- **`src/lib/content.ts`** imports it (via `resolveJsonModule`) and re-exports it typed as `SiteContent`. `src/routes/index.tsx` reads from this — when changing the homepage, edit the JSON (or types + JSON), not hardcoded strings.
+- **`/admin` route** (`src/routes/admin.tsx`) is a password-gated editor that calls the GitHub Contents API via `src/lib/github-content.ts` to commit updates to `src/content.json` and upload new images directly to the repo. It needs a user-supplied GitHub PAT with `contents:write` on this repo; the password and token live in `localStorage` only.
+- Editing `content.json` from the admin UI triggers a fresh GitHub Pages deploy via the workflow above — there is no separate CMS.
 
 ## Conventions
 
