@@ -42,17 +42,19 @@
   },
   "footer": {
     "tagline": "Your one-stop shop for all your printing and branding needs.",
-    "phone": "(555) 123-4567",
-    "email": "info@techmonkeysprint.com",
-    "addressLine1": "123 Print Lane",
-    "addressLine2": "Yourtown, ST 12345",
-    "hours": "Mon - Fri: 9AM - 6PM",
-    "copyright": "© 2024 Tech Monkeys Graphics Solutions. All rights reserved.",
+    "phone": "650-0550",
+    "phone2": "635-5765",
+    "email": "info@techmonkeys.bz",
+    "email2": "techmonkeys.bz@gmail.com",
+    "addressLine1": "Sunset Drive, Duck Run 2",
+    "addressLine2": "Spanish Lookout, Cayo District",
+    "hours": "Mon-Fri 7am-6pm · Sat 8am-2pm · Sun closed",
+    "copyright": "© 2026 Tech Monkeys Graphics Solutions. All rights reserved.",
     "social": {
       "facebook": "#",
       "instagram": "#",
       "tiktok": "#",
-      "email": "mailto:info@techmonkeysprint.com"
+      "email": "mailto:info@techmonkeys.bz"
     }
   }
 }

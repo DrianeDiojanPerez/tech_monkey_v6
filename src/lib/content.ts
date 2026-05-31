@@ -24,7 +24,9 @@ export type SiteContent = {
   footer: {
     tagline: string
     phone: string
+    phone2?: string
     email: string
+    email2?: string
     addressLine1: string
     addressLine2: string
     hours: string

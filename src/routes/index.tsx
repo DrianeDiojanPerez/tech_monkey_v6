@@ -933,11 +933,31 @@ function TechMonkeysHome() {
             <ul className="tm-foot-contact">
               <li>
                 <Phone className="tm-ci" size={18} strokeWidth={1.8} />
-                {content.footer.phone}
+                <span>
+                  {content.footer.phone}
+                  {content.footer.phone2 ? (
+                    <>
+                      <br />
+                      <span className="tm-indent">
+                        {content.footer.phone2}
+                      </span>
+                    </>
+                  ) : null}
+                </span>
               </li>
               <li>
                 <Mail className="tm-ci" size={18} strokeWidth={1.8} />
-                {content.footer.email}
+                <span>
+                  {content.footer.email}
+                  {content.footer.email2 ? (
+                    <>
+                      <br />
+                      <span className="tm-indent">
+                        {content.footer.email2}
+                      </span>
+                    </>
+                  ) : null}
+                </span>
               </li>
               <li>
                 <MapPin className="tm-ci" size={18} strokeWidth={1.8} />
