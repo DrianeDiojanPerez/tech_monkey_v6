@@ -934,13 +934,21 @@ function TechMonkeysHome() {
               <li>
                 <Phone className="tm-ci" size={18} strokeWidth={1.8} />
                 <span>
-                  {content.footer.phone}
+                  <a
+                    href={`tel:${content.footer.phone.replace(/[^\d+]/g, "")}`}
+                    className="tm-foot-link"
+                  >
+                    {content.footer.phone}
+                  </a>
                   {content.footer.phone2 ? (
                     <>
                       <br />
-                      <span className="tm-indent">
+                      <a
+                        href={`tel:${content.footer.phone2.replace(/[^\d+]/g, "")}`}
+                        className="tm-foot-link tm-indent"
+                      >
                         {content.footer.phone2}
-                      </span>
+                      </a>
                     </>
                   ) : null}
                 </span>
@@ -948,26 +956,44 @@ function TechMonkeysHome() {
               <li>
                 <Mail className="tm-ci" size={18} strokeWidth={1.8} />
                 <span>
-                  {content.footer.email}
+                  <a
+                    href={`mailto:${content.footer.email}`}
+                    className="tm-foot-link"
+                  >
+                    {content.footer.email}
+                  </a>
                   {content.footer.email2 ? (
                     <>
                       <br />
-                      <span className="tm-indent">
+                      <a
+                        href={`mailto:${content.footer.email2}`}
+                        className="tm-foot-link tm-indent"
+                      >
                         {content.footer.email2}
-                      </span>
+                      </a>
                     </>
                   ) : null}
                 </span>
               </li>
               <li>
                 <MapPin className="tm-ci" size={18} strokeWidth={1.8} />
-                <span>
+                <a
+                  href={
+                    content.footer.mapsUrl ??
+                    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                      `${content.footer.addressLine1}, ${content.footer.addressLine2}, Belize`
+                    )}`
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="tm-foot-link"
+                >
                   {content.footer.addressLine1}
                   <br />
                   <span className="tm-indent">
                     {content.footer.addressLine2}
                   </span>
-                </span>
+                </a>
               </li>
               <li>
                 <Clock className="tm-ci" size={18} strokeWidth={1.8} />

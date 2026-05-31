@@ -29,6 +29,7 @@ export type SiteContent = {
     email2?: string
     addressLine1: string
     addressLine2: string
+    mapsUrl?: string
     hours: string
     copyright: string
     social: {

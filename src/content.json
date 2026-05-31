@@ -42,12 +42,13 @@
   },
   "footer": {
     "tagline": "Your one-stop shop for all your printing and branding needs.",
-    "phone": "650-0550",
-    "phone2": "635-5765",
+    "phone": "+501 650-0550",
+    "phone2": "+501 635-5765",
     "email": "info@techmonkeys.bz",
     "email2": "techmonkeys.bz@gmail.com",
     "addressLine1": "Sunset Drive, Duck Run 2",
     "addressLine2": "Spanish Lookout, Cayo District",
+    "mapsUrl": "https://www.google.com/maps/place/Tech+Monkeys+Graphics+Solutions/@17.2422335,-89.0361949,1215m/data=!3m1!1e3!4m14!1m7!3m6!1s0x8f5e619e40bafe8d:0x5993753cd68929a2!2sTech+Monkeys+Graphics+Solutions!8m2!3d17.2422335!4d-89.0336146!16s%2Fg%2F11dydhlm6b!3m5!1s0x8f5e619e40bafe8d:0x5993753cd68929a2!8m2!3d17.2422335!4d-89.0336146!16s%2Fg%2F11dydhlm6b?entry=ttu",
     "hours": "Mon-Fri 7am-6pm · Sat 8am-2pm · Sun closed",
     "copyright": "© 2026 Tech Monkeys Graphics Solutions. All rights reserved.",
     "social": {
