@@ -1197,6 +1197,32 @@ html {
   border: 1px solid #e2dcc9;
   border-radius: 8px;
 }
+.tm-calc-field--units {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+select.tm-calc-units-select {
+  width: auto;
+  min-width: 160px;
+}
+.tm-calc-ftin {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto;
+  align-items: center;
+  gap: 6px;
+}
+.tm-calc-ftin input {
+  min-width: 0;
+}
+.tm-calc-ftin-unit {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6e6e6e;
+}
 .tm-calc-toggle {
   display: inline-flex;
   align-items: center;

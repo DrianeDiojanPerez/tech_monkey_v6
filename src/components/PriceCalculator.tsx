@@ -11,6 +11,7 @@ import {
   MoveHorizontal,
   MoveVertical,
   Presentation,
+  Ruler,
   Square,
   Sticker,
   Sun,
@@ -61,6 +62,82 @@ const ACRYLIC_PRICES: Record<
 > = {
   "3mm": { base: 24, withUv: 30 },
   "5mm": { base: 31, withUv: 37 },
+}
+
+type SizeUnit =
+  | "ft-in"
+  | "in"
+  | "ft"
+  | "yd"
+  | "mile"
+  | "mm"
+  | "cm"
+  | "m"
+  | "km"
+
+const UNITS: ReadonlyArray<{ id: SizeUnit; label: string; short: string }> = [
+  { id: "ft-in", label: "ft + in", short: "ft + in" },
+  { id: "in", label: "Inches (in)", short: "in" },
+  { id: "ft", label: "Feet (ft)", short: "ft" },
+  { id: "yd", label: "Yards (yd)", short: "yd" },
+  { id: "mile", label: "Miles", short: "mi" },
+  { id: "mm", label: "Millimeters (mm)", short: "mm" },
+  { id: "cm", label: "Centimeters (cm)", short: "cm" },
+  { id: "m", label: "Meters (m)", short: "m" },
+  { id: "km", label: "Kilometers (km)", short: "km" },
+]
+
+const UNIT_FACTOR: Record<Exclude<SizeUnit, "ft-in">, number> = {
+  in: 1,
+  ft: 12,
+  yd: 36,
+  mile: 63360,
+  mm: 0.03937008,
+  cm: 0.3937008,
+  m: 39.37008,
+  km: 39370.08,
+}
+
+const UNIT_STEP: Record<SizeUnit, number> = {
+  "ft-in": 1,
+  in: 1,
+  ft: 0.1,
+  yd: 0.1,
+  mile: 0.001,
+  mm: 1,
+  cm: 0.1,
+  m: 0.05,
+  km: 0.001,
+}
+
+const UNIT_SHORT: Record<SizeUnit, string> = {
+  "ft-in": "ft + in",
+  in: "in",
+  ft: "ft",
+  yd: "yd",
+  mile: "mi",
+  mm: "mm",
+  cm: "cm",
+  m: "m",
+  km: "km",
+}
+
+function dimToInches(
+  unit: SizeUnit,
+  str: string,
+  ftStr: string,
+  inStr: string
+): number {
+  if (unit === "ft-in") {
+    return (parseFloat(ftStr) || 0) * 12 + (parseFloat(inStr) || 0)
+  }
+  return (parseFloat(str) || 0) * UNIT_FACTOR[unit]
+}
+
+function roundDisplay(n: number, places = 4): string {
+  if (!Number.isFinite(n)) return "0"
+  const p = Math.pow(10, places)
+  return String(Math.round(n * p) / p)
 }
 
 function resolvePrice(
@@ -147,19 +224,54 @@ export function PriceCalculator() {
   const [acrylicThickness, setAcrylicThickness] =
     useState<AcrylicThickness>("3mm")
   const [uvLaminate, setUvLaminate] = useState(false)
-  const [widthIn, setWidthIn] = useState(12)
-  const [heightIn, setHeightIn] = useState(12)
+  const [sizeUnit, setSizeUnit] = useState<SizeUnit>("in")
   const [widthStr, setWidthStr] = useState("12")
   const [heightStr, setHeightStr] = useState("12")
+  const [widthFtStr, setWidthFtStr] = useState("1")
+  const [widthInPartStr, setWidthInPartStr] = useState("0")
+  const [heightFtStr, setHeightFtStr] = useState("1")
+  const [heightInPartStr, setHeightInPartStr] = useState("0")
   const [quantity, setQuantity] = useState(1)
 
+  const widthIn = dimToInches(sizeUnit, widthStr, widthFtStr, widthInPartStr)
+  const heightIn = dimToInches(
+    sizeUnit,
+    heightStr,
+    heightFtStr,
+    heightInPartStr
+  )
+
   useEffect(() => {
-    setWidthIn(12)
-    setHeightIn(12)
+    setSizeUnit("in")
     setWidthStr("12")
     setHeightStr("12")
+    setWidthFtStr("1")
+    setWidthInPartStr("0")
+    setHeightFtStr("1")
+    setHeightInPartStr("0")
     setQuantity(1)
   }, [product])
+
+  function handleUnitChange(next: SizeUnit) {
+    if (next === sizeUnit) return
+    const curW = dimToInches(sizeUnit, widthStr, widthFtStr, widthInPartStr)
+    const curH = dimToInches(sizeUnit, heightStr, heightFtStr, heightInPartStr)
+    if (next === "ft-in") {
+      const wFt = Math.floor(curW / 12)
+      const wIn = Math.round((curW - wFt * 12) * 10) / 10
+      const hFt = Math.floor(curH / 12)
+      const hIn = Math.round((curH - hFt * 12) * 10) / 10
+      setWidthFtStr(String(wFt))
+      setWidthInPartStr(String(wIn))
+      setHeightFtStr(String(hFt))
+      setHeightInPartStr(String(hIn))
+    } else {
+      const factor = UNIT_FACTOR[next]
+      setWidthStr(roundDisplay(curW / factor))
+      setHeightStr(roundDisplay(curH / factor))
+    }
+    setSizeUnit(next)
+  }
 
   const areaSqFt = useMemo(() => {
     const w = Number.isFinite(widthIn) && widthIn > 0 ? widthIn : 0
@@ -202,7 +314,11 @@ export function PriceCalculator() {
       specLines.push(`• Material: ${detail}`)
     }
 
-    const sizeLine = `• Size: ${widthIn}" × ${heightIn}" (${areaSqFt.toFixed(2)} sq ft)`
+    const sizeStr =
+      sizeUnit === "ft-in"
+        ? `${widthFtStr} ft ${widthInPartStr} in × ${heightFtStr} ft ${heightInPartStr} in`
+        : `${widthStr} × ${heightStr} ${UNIT_SHORT[sizeUnit]}`
+    const sizeLine = `• Size: ${sizeStr} (${areaSqFt.toFixed(2)} sq ft)`
     specLines.push(sizeLine)
     specLines.push(`• Quantity: ${quantity}`)
 
@@ -229,9 +345,13 @@ export function PriceCalculator() {
       "Sent from techmonkeys.com",
     ].join("\r\n")
 
+    const sizeCompact =
+      sizeUnit === "ft-in"
+        ? `${widthFtStr}ft${widthInPartStr}in×${heightFtStr}ft${heightInPartStr}in`
+        : `${widthStr}×${heightStr} ${UNIT_SHORT[sizeUnit]}`
     const subjectText =
       price.kind === "priced"
-        ? `Quote request: ${productLabel} · ${widthIn}×${heightIn}" · qty ${quantity}`
+        ? `Quote request: ${productLabel} · ${sizeCompact} · qty ${quantity}`
         : `Quote request: ${productLabel} (custom)`
 
     return `mailto:${content.footer.email}?subject=${encodeURIComponent(subjectText)}&body=${encodeURIComponent(bodyText)}`
@@ -240,8 +360,13 @@ export function PriceCalculator() {
     signMaterial,
     acrylicThickness,
     uvLaminate,
-    widthIn,
-    heightIn,
+    widthStr,
+    heightStr,
+    widthFtStr,
+    widthInPartStr,
+    heightFtStr,
+    heightInPartStr,
+    sizeUnit,
     quantity,
     areaSqFt,
     price,
@@ -365,6 +490,27 @@ export function PriceCalculator() {
               </>
             ) : null}
 
+            <div className="tm-calc-field tm-calc-field--full tm-calc-field--units">
+              <label htmlFor="calc-unit" className="tm-calc-field-label">
+                <Ruler size={13} strokeWidth={2.2} aria-hidden="true" />
+                Size unit
+              </label>
+              <select
+                id="calc-unit"
+                className="tm-calc-units-select"
+                value={sizeUnit}
+                onChange={(e) =>
+                  handleUnitChange(e.target.value as SizeUnit)
+                }
+              >
+                {UNITS.map((u) => (
+                  <option key={u.id} value={u.id}>
+                    {u.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <div className="tm-calc-field">
               <label htmlFor="calc-width">
                 <MoveHorizontal
@@ -372,31 +518,50 @@ export function PriceCalculator() {
                   strokeWidth={2.2}
                   aria-hidden="true"
                 />
-                Width (in)
+                Width ({UNIT_SHORT[sizeUnit]})
               </label>
-              <input
-                id="calc-width"
-                type="number"
-                inputMode="decimal"
-                min={1}
-                step={0.1}
-                value={widthStr}
-                onChange={(e) => {
-                  const v = e.target.value
-                  setWidthStr(v)
-                  if (v === "") {
-                    setWidthIn(0)
-                  } else {
-                    const n = parseFloat(v)
-                    if (!isNaN(n)) setWidthIn(n)
-                  }
-                }}
-                onBlur={() => {
-                  const n = parseFloat(widthStr) || 0
-                  setWidthStr(String(n))
-                  setWidthIn(n)
-                }}
-              />
+              {sizeUnit === "ft-in" ? (
+                <div className="tm-calc-ftin">
+                  <input
+                    id="calc-width"
+                    type="number"
+                    inputMode="decimal"
+                    min={0}
+                    step={1}
+                    value={widthFtStr}
+                    onChange={(e) => setWidthFtStr(e.target.value)}
+                    onBlur={() =>
+                      setWidthFtStr(String(parseFloat(widthFtStr) || 0))
+                    }
+                    aria-label="Width feet"
+                  />
+                  <span className="tm-calc-ftin-unit">ft</span>
+                  <input
+                    type="number"
+                    inputMode="decimal"
+                    min={0}
+                    step={0.5}
+                    value={widthInPartStr}
+                    onChange={(e) => setWidthInPartStr(e.target.value)}
+                    onBlur={() =>
+                      setWidthInPartStr(String(parseFloat(widthInPartStr) || 0))
+                    }
+                    aria-label="Width inches"
+                  />
+                  <span className="tm-calc-ftin-unit">in</span>
+                </div>
+              ) : (
+                <input
+                  id="calc-width"
+                  type="number"
+                  inputMode="decimal"
+                  min={0}
+                  step={UNIT_STEP[sizeUnit]}
+                  value={widthStr}
+                  onChange={(e) => setWidthStr(e.target.value)}
+                  onBlur={() => setWidthStr(String(parseFloat(widthStr) || 0))}
+                />
+              )}
             </div>
 
             <div className="tm-calc-field">
@@ -406,31 +571,54 @@ export function PriceCalculator() {
                   strokeWidth={2.2}
                   aria-hidden="true"
                 />
-                Height (in)
+                Height ({UNIT_SHORT[sizeUnit]})
               </label>
-              <input
-                id="calc-height"
-                type="number"
-                inputMode="decimal"
-                min={1}
-                step={0.1}
-                value={heightStr}
-                onChange={(e) => {
-                  const v = e.target.value
-                  setHeightStr(v)
-                  if (v === "") {
-                    setHeightIn(0)
-                  } else {
-                    const n = parseFloat(v)
-                    if (!isNaN(n)) setHeightIn(n)
+              {sizeUnit === "ft-in" ? (
+                <div className="tm-calc-ftin">
+                  <input
+                    id="calc-height"
+                    type="number"
+                    inputMode="decimal"
+                    min={0}
+                    step={1}
+                    value={heightFtStr}
+                    onChange={(e) => setHeightFtStr(e.target.value)}
+                    onBlur={() =>
+                      setHeightFtStr(String(parseFloat(heightFtStr) || 0))
+                    }
+                    aria-label="Height feet"
+                  />
+                  <span className="tm-calc-ftin-unit">ft</span>
+                  <input
+                    type="number"
+                    inputMode="decimal"
+                    min={0}
+                    step={0.5}
+                    value={heightInPartStr}
+                    onChange={(e) => setHeightInPartStr(e.target.value)}
+                    onBlur={() =>
+                      setHeightInPartStr(
+                        String(parseFloat(heightInPartStr) || 0)
+                      )
+                    }
+                    aria-label="Height inches"
+                  />
+                  <span className="tm-calc-ftin-unit">in</span>
+                </div>
+              ) : (
+                <input
+                  id="calc-height"
+                  type="number"
+                  inputMode="decimal"
+                  min={0}
+                  step={UNIT_STEP[sizeUnit]}
+                  value={heightStr}
+                  onChange={(e) => setHeightStr(e.target.value)}
+                  onBlur={() =>
+                    setHeightStr(String(parseFloat(heightStr) || 0))
                   }
-                }}
-                onBlur={() => {
-                  const n = parseFloat(heightStr) || 0
-                  setHeightStr(String(n))
-                  setHeightIn(n)
-                }}
-              />
+                />
+              )}
             </div>
 
             <div className="tm-calc-field tm-calc-field--full">
